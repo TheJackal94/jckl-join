@@ -39,8 +39,8 @@
 <div class="arrow hide" id="arrow"><b>↑</b>Tap ••• then<br>"Open in browser"</div>
 <main>
   <div class="brand">JCKL TRADING</div>
-  <h1>Your free trading plan template</h1>
-  <p>Daily loss limit, risk per trade, rules and a pre-trade checklist. It's waiting for you on our Telegram.</p>
+  <h1 id="h">Your free trading plan template</h1>
+  <p id="sub">Daily loss limit, risk per trade, rules and a pre-trade checklist. It's waiting for you on our Telegram.</p>
 
   <!-- in-app browser (TikTok / Instagram / Facebook): get out first -->
   <section id="inapp" class="hide">
@@ -73,7 +73,19 @@
   var BOT = "jckl_trading_bot";
   var qs = new URLSearchParams(location.search);
   var src = (qs.get("src") || qs.get("s") || "web").replace(/[^a-z0-9_]/gi, "").slice(0, 20) || "web";
-  var start = "plan_" + src;
+  var GIFTS = {
+    plan: ["Your free trading plan template", "Daily loss limit, risk per trade, rules and a pre-trade checklist. It's waiting for you on our Telegram."],
+    smc: ["Your free SMC cheat sheet", "BOS, CHoCH, order blocks, FVGs, liquidity sweeps and premium/discount, each with a picture. It's waiting for you on our Telegram."],
+    sessions: ["Your free gold sessions & news cheat sheet", "Every session, kill zone and big US news release in SA time, and how gold tends to react. It's waiting for you on our Telegram."],
+    journal: ["Your free trading journal template", "A spreadsheet that works out your R, win rate, monthly results and costliest mistakes. It's waiting for you on our Telegram."],
+    calc: ["Free lot size calculator", "Send your balance, risk % and stop distance, get the right lot size for gold. It lives in our Telegram bot."]
+  };
+  var gift = (qs.get("gift") || qs.get("g") || "plan").toLowerCase();
+  if (!GIFTS[gift]) gift = "plan";
+  document.getElementById("h").textContent = GIFTS[gift][0];
+  document.getElementById("sub").textContent = GIFTS[gift][1];
+  document.title = "JCKL Trading: " + GIFTS[gift][0].replace(/^Your /, "");
+  var start = gift + "_" + src;
   var https = "https://t.me/" + BOT + "?start=" + start;
   var tg = "tg://resolve?domain=" + BOT + "&start=" + start;
 
@@ -98,7 +110,7 @@
   }
 
   // this page again, in the real browser, with ?go=1 so it jumps straight to Telegram
-  var here = location.host + location.pathname + "?src=" + encodeURIComponent(src) + "&go=1";
+  var here = location.host + location.pathname + "?src=" + encodeURIComponent(src) + "&gift=" + gift + "&go=1";
   function escapeHref() {
     if (ios) return "x-safari-https://" + here;                     // iOS 17+: opens Safari
     if (android) return "intent://" + here + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
